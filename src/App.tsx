@@ -3,10 +3,8 @@ import VKUIWrapper from './wrappers/VKUIWrapper'
 
 const App = () => {
   return (
-      <VKUIWrapper >
-    <div>
-      <UserProfile />
-    </div>
+      <VKUIWrapper>
+          <UserProfile />
       </VKUIWrapper>
   );
 };
