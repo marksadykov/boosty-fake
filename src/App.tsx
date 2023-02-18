@@ -1,18 +1,19 @@
+import bridge from "@vkontakte/vk-bridge";
 import UserProfile from "./components/UserProfile";
-import VKUIWrapper from './wrappers/VKUIWrapper'
-import bridge from '@vkontakte/vk-bridge';
-import {initApp} from './utils/vk';
-
-
+import { ChainConnectionProvider } from "./contexts/ChainConnectionContext";
+import { initApp } from "./utils/vk";
+import VKUIWrapper from "./wrappers/VKUIWrapper";
 
 const App = () => {
-    bridge.send('VKWebAppInit', {});
-    initApp();
+  bridge.send("VKWebAppInit", {});
+  initApp();
 
   return (
-      <VKUIWrapper>
-          <UserProfile />
-      </VKUIWrapper>
+    <VKUIWrapper>
+      <ChainConnectionProvider>
+        <UserProfile />
+      </ChainConnectionProvider>
+    </VKUIWrapper>
   );
 };
 
