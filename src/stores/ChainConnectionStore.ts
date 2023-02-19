@@ -81,6 +81,24 @@ export default class ChainConnectionStore implements Disposable {
     }
   };
 
+  signMessage = async () => {
+    try {
+      const signedMessage = await this.ethersProvider
+        .getSigner()
+        .signMessage("message challenge");
+    } catch (err) {
+      // Some unexpected error.
+      // For backwards compatibility reasons, if no accounts are available,
+      // eth_accounts will return an empty array.
+      console.error(err);
+    }
+  };
+
+  auth = async () => {
+    await this.getAccount();
+    await this.signMessage();
+  }
+
   getBalance = async () => {
     try {
       this._currentBalance = await this.ethersProvider.getBalance(

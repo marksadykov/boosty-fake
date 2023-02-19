@@ -1,10 +1,9 @@
-export const ERC20_ABI = [
-  "function name() view returns (string)",
-  "function symbol() view returns (string)",
-  "function totalSupply() view returns (uint256)",
-  "function balanceOf(address) view returns (uint)",
-  "function transfer(address to, uint amount) returns (bool)",
+export const FACTORY_ABI = [
+  `function createNFT(
+        string name_,
+        string symbol_,
+        uint256 maxSupply_
+    ) returns (address) `,
 ];
 
-export const WMATIC_MUMBAI_ADDRESS =
-  "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889";
+export const FACTORY_ADDRESS = "0x3Bc1FeD311902Cfe20f7aDCf2323cBF31D182c04";
