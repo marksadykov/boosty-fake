@@ -9,9 +9,13 @@ import {
 import styles from "./DeniedAccessModal.module.scss";
 import { ReactComponent as CloseIcon } from "./icons/close.svg";
 
-const DeniedAccessModal = () => {
+interface Props {
+  setHideModal: () => void;
+}
+
+const DeniedAccessModal = ({ setHideModal }: Props) => {
   return (
-    <ModalRoot activeModal={"DENIED_ACCESS"}>
+    <ModalRoot activeModal={"DENIED_ACCESS"} onClose={setHideModal}>
       <ModalPage id={"DENIED_ACCESS"} settlingHeight={100}>
         <Group mode="plain">
           <div className={styles.access_group}>
@@ -19,7 +23,7 @@ const DeniedAccessModal = () => {
               Доступ к сообществу <Link>Art cleric club</Link> не получен
             </Title>
             <CloseIcon className={styles.collection_image} />
-            <Button size="l" appearance="accent">
+            <Button size="l" appearance="accent" onClick={setHideModal}>
               Вернуться назад
             </Button>
           </div>
