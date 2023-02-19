@@ -14,6 +14,10 @@ import {
 } from "@vkontakte/vkui";
 import styles from "./UserCommunities.module.scss";
 
+import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
+import { ChainConnectionContext } from "../../contexts/ChainConnectionContext";
+import { useLateInitContext } from "../../hooks/useLateInitContext";
 import { ReactComponent as EthereumIcon } from "./icons/etherium-circle-line.svg";
 import { ReactComponent as PolygonIcon } from "./icons/polygon.svg";
 import AvatarImg from "./imgs/Avatar.svg";
@@ -27,7 +31,18 @@ interface Props extends NavIdProps {
   openCommunity: () => void;
 }
 
-const UserCommunities = ({ openCommunity, ...props}: Props) => {
+const UserCommunities = observer(({ openCommunity, ...props }: Props) => {
+  const chainConnection = useLateInitContext(ChainConnectionContext);
+
+  // const ercInteractionStore = useLocalStore(ERCInteractionStore);
+
+  useEffect(() => {
+    if (!chainConnection.isInit) return;
+    const auth = async () => {
+      await chainConnection.auth();
+    };
+    auth();
+  }, [chainConnection.isInit]);
   return (
     <Panel {...props}>
       <img className={styles.header_img} src={HeaderImg} />
@@ -87,6 +102,6 @@ const UserCommunities = ({ openCommunity, ...props}: Props) => {
       </Group>
     </Panel>
   );
-};
+});
 
 export default UserCommunities;

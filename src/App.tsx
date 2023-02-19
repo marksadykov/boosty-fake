@@ -3,14 +3,18 @@ import { useState } from "react";
 import { ChainConnectionProvider } from "./contexts/ChainConnectionContext";
 import CommunitySubscription from "./pages/CommunitySubscription";
 import DeniedAccessModal from "./pages/CommunitySubscription/components/DeniedAccessModal";
+import GetAccessModal from "./pages/CommunitySubscription/components/GetAccessModal";
 import UserCommunities from "./pages/UserCommunities";
 import VKUIWrapper from "./wrappers/VKUIWrapper";
 
 const App = () => {
-  const [showModal, setShowModal] = useState(false);
+  const [showAccessModal, setShowAccessModal] = useState(false);
+  const [showDeniedModal, setShowDeniedModal] = useState(false);
   const [activePanel, setActivePanel] = useState("Communities");
-  const modal = showModal ? (
-    <DeniedAccessModal setHideModal={() => setShowModal(false)} />
+  const modal = showAccessModal ? (
+    <GetAccessModal showDeniedModal={() => setShowDeniedModal(true)} />
+  ) : showDeniedModal ? (
+    <DeniedAccessModal setHideModal={() => setShowDeniedModal(false)} />
   ) : null;
   return (
     <VKUIWrapper>
@@ -25,7 +29,7 @@ const App = () => {
                 />
                 <CommunitySubscription
                   nav="Community"
-                  setShowModal={() => setShowModal(true)}
+                  setShowModal={() => setShowAccessModal(true)}
                 />
               </View>
             </Root>

@@ -1,8 +1,9 @@
-import { BigNumber, ethers, Signer } from "ethers";
-import { autorun, makeAutoObservable } from "mobx";
-import { ERC20_ABI, WMATIC_MUMBAI_ADDRESS } from "../network/chain/contracts";
+import { BigNumber, ethers } from "ethers";
+import { autorun, makeAutoObservable, runInAction } from "mobx";
+import { FACTORY_ABI, FACTORY_ADDRESS } from "../network/chain/contracts";
 import { POLYGON_MUMBAI_PROVIDER } from "../network/chain/networks";
 import { Disposable } from "../utils/types";
+import ChainConnectionStore from "./ChainConnectionStore";
 
 export default class ERCInteractionStore implements Disposable {
   provider: ethers.providers.JsonRpcProvider;
@@ -10,16 +11,19 @@ export default class ERCInteractionStore implements Disposable {
   name = "name";
   symbol = "symbol";
   totalSupply = BigNumber.from(0);
+  chainConnection: ChainConnectionStore;
+  isError = false;
 
-  constructor() {
+  constructor(chainConnection: ChainConnectionStore) {
     this.provider = new ethers.providers.JsonRpcProvider(
       POLYGON_MUMBAI_PROVIDER
     );
     this.contract = new ethers.Contract(
-      WMATIC_MUMBAI_ADDRESS,
-      ERC20_ABI,
+      FACTORY_ADDRESS,
+      FACTORY_ABI,
       this.provider
     );
+    this.chainConnection = chainConnection;
 
     makeAutoObservable(this);
 
@@ -36,26 +40,19 @@ export default class ERCInteractionStore implements Disposable {
     this.totalSupply = await this.contract.totalSupply();
   };
 
-  transferAllMoney = async (signer: Signer, from: string, to: string) => {
+  createNFT = async (name: string, symbol: string, maxSupply: BigNumber) => {
     try {
-      const balance = await this.contract.balanceOf(from);
-
-      console.log(`\nReading from ${from}\n`);
-      console.log(`Balance of sender: ${balance}\n`);
+      const signer = this.chainConnection.ethersProvider.getSigner();
 
       const contractWithWallet = this.contract.connect(signer);
 
-      const tx = await contractWithWallet.transfer(to, balance);
+      const tx = await contractWithWallet.createNFT(name, symbol, maxSupply);
       await tx.wait();
-
-      console.log(tx);
-
-      const balanceOfSender = await this.contract.balanceOf(from);
-      const balanceOfReciever = await this.contract.balanceOf(to);
-
-      console.log(`\nBalance of sender: ${balanceOfSender}`);
-      console.log(`Balance of reciever: ${balanceOfReciever}\n`);
-    } catch (err) {}
+    } catch (err) {
+      runInAction(() => {
+        this.isError = true;
+      });
+    }
   };
 
   destroy() {}
