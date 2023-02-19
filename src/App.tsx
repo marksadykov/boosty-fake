@@ -1,14 +1,14 @@
 import { SplitLayout } from "@vkontakte/vkui";
 import { ChainConnectionProvider } from "./contexts/ChainConnectionContext";
 import CommunitySubscription from "./pages/CommunitySubscription";
-import GrantedAccessModal from "./pages/CommunitySubscription/components/GrantedAccessModal";
+import DeniedAccessModal from "./pages/CommunitySubscription/components/DeniedAccessModal";
 import VKUIWrapper from "./wrappers/VKUIWrapper";
 
 const App = () => {
   return (
     <VKUIWrapper>
       <ChainConnectionProvider>
-        <SplitLayout modal={<GrantedAccessModal />}>
+        <SplitLayout modal={<DeniedAccessModal />}>
           <CommunitySubscription />
         </SplitLayout>
       </ChainConnectionProvider>
