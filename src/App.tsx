@@ -1,12 +1,12 @@
 import { ChainConnectionProvider } from "./contexts/ChainConnectionContext";
-import UserCommunities from "./pages/UserCommunities";
+import CommunitySubscription from "./pages/CommunitySubscription";
 import VKUIWrapper from "./wrappers/VKUIWrapper";
 
 const App = () => {
   return (
     <VKUIWrapper>
       <ChainConnectionProvider>
-        <UserCommunities />
+        <CommunitySubscription />
       </ChainConnectionProvider>
     </VKUIWrapper>
   );
